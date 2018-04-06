@@ -520,16 +520,18 @@ namespace MatterHackers.MatterSlice
 
 				for (int extruderIndex = 0; extruderIndex < config.MaxExtruderCount(); extruderIndex++)
 				{
-					int prevExtruder = layerGcodePlanner.GetExtruder();
-					bool extruderChanged = layerGcodePlanner.SetExtruder(extruderIndex);
-
-					if (extruderChanged 
+					if (layerGcodePlanner.GetExtruder() != extruderIndex
 						&& slicingData.HaveWipeTower(config)
 						&& layerIndex < slicingData.LastLayerWithChange(config))
 					{
+						var prevExtruder = layerGcodePlanner.GetExtruder();
+						layerGcodePlanner.QueueTravel(slicingData.wipePoint);
+						layerGcodePlanner.SetExtruder(extruderIndex);
 						slicingData.PrimeOnWipeTower(extruderIndex, layerIndex, layerGcodePlanner, fillConfig, config, false);
 						//Make sure we wipe the old extruder on the wipe tower.
-						layerGcodePlanner.QueueTravel(slicingData.wipePoint - config.ExtruderOffsets[prevExtruder] + config.ExtruderOffsets[layerGcodePlanner.GetExtruder()]);
+						layerGcodePlanner.QueueTravel(slicingData.wipePoint - config.ExtruderOffsets[prevExtruder] + config.ExtruderOffsets[extruderIndex]);
+					} else {
+						layerGcodePlanner.SetExtruder(extruderIndex);
 					}
 
 					if (layerIndex == 0)
@@ -1057,16 +1059,18 @@ namespace MatterHackers.MatterSlice
 				&& !config.ContinuousSpiralOuterPerimeter
 				&& layerIndex > 0)
 			{
-				int prevExtruder = layerGcodePlanner.GetExtruder();
-				bool extruderChanged = layerGcodePlanner.SetExtruder(extruderIndex);
-
-				if (extruderChanged
+				if (layerGcodePlanner.GetExtruder() != extruderIndex
 					&& slicingData.HaveWipeTower(config)
 					&& layerIndex < slicingData.LastLayerWithChange(config))
 				{
+					var prevExtruder = layerGcodePlanner.GetExtruder();
+					layerGcodePlanner.QueueTravel(slicingData.wipePoint);
+					layerGcodePlanner.SetExtruder(extruderIndex);
 					slicingData.PrimeOnWipeTower(extruderIndex, layerIndex, layerGcodePlanner, fillConfig, config, true);
 					//Make sure we wipe the old extruder on the wipe tower.
-					layerGcodePlanner.QueueTravel(slicingData.wipePoint - config.ExtruderOffsets[prevExtruder] + config.ExtruderOffsets[layerGcodePlanner.GetExtruder()]);
+					layerGcodePlanner.QueueTravel(slicingData.wipePoint - config.ExtruderOffsets[prevExtruder] + config.ExtruderOffsets[extruderIndex]);
+				} else {
+					layerGcodePlanner.SetExtruder(extruderIndex);
 				}
 
 				SliceLayer layer = slicingData.Extruders[extruderIndex].Layers[layerIndex];
