@@ -216,7 +216,7 @@ namespace MatterHackers.MatterSlice
 			for (int extruderIndex = 0; extruderIndex < extruderList.Count; extruderIndex++)
 			{
 				slicingData.Extruders.Add(new ExtruderLayers());
-				slicingData.Extruders[extruderIndex].InitializeLayerData(extruderList[extruderIndex], config, extruderIndex, extruderList.Count, extraPathingConsideration);
+				slicingData.Extruders[extruderIndex].InitializeLayerData(extruderList[extruderIndex], config, extruderIndex);
 
 				if (config.EnableRaft)
 				{
@@ -227,6 +227,9 @@ namespace MatterHackers.MatterSlice
 					}
 				}
 			}
+
+            ExtruderLayers.InitializeLayerPathing(config, extraPathingConsideration, slicingData.Extruders);
+
 			LogOutput.Log("Generated layer parts in {0:0.0}s\n".FormatWith(timeKeeper.Elapsed.TotalSeconds));
 			timeKeeper.Restart();
 		}
