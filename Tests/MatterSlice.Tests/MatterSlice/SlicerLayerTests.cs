@@ -223,7 +223,7 @@ namespace MatterHackers.MatterSlice.Tests
 			}
 		}
 
-		[TestFixtureSetUp]
+        [SetUp]
 		public void TestSetup()
 		{
 			// Ensure the temp directory exists

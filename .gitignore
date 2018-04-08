@@ -111,3 +111,4 @@ Backup*/
 UpgradeLog*.XML
 GCode_Test/
 Tests/TestData/Temp/
+.vs
