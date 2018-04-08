@@ -60,7 +60,9 @@ namespace MatterHackers.Pathfinding
 				int lastLinkIndex = polygon.Count - 1 + startNode;
 				for (int i = startNode; i < polygon.Count + startNode; i++)
 				{
-					AddPathLink(Nodes[lastLinkIndex], Nodes[i]);
+                    if (Nodes[lastLinkIndex].Position != Nodes[i].Position)
+					    AddPathLink(Nodes[lastLinkIndex], Nodes[i]);
+                    
 					lastLinkIndex = i;
 				}
 			}
